@@ -10,6 +10,7 @@ import json
 import logging
 import colorsys
 from datetime import datetime, timedelta
+from sip_components.ui_components import UIComponents
 
 class TabComponents:
     @staticmethod
@@ -413,7 +414,9 @@ class TabComponents:
                         # ------------ 4) Format metric ------------
                         # formatted_square_footage = f"{total_square_footage:,.0f}" if total_square_footage > 0 else "N/A"
                         if total_square_footage > 0:
-                            formatted_square_footage = f"{total_square_footage / 1000:.1f}k"
+                            # Convert to proper format (if it's already in thousands, we multiply by 1000 for display)
+                            actual_square_footage = total_square_footage * 1000
+                            formatted_square_footage = UIComponents.format_large_number(actual_square_footage)
                         else:
                             formatted_square_footage = "N/A"
 
@@ -424,7 +427,7 @@ class TabComponents:
         if metrics_title == "Net":
             return formatted_square_footage
         # Render metric cards using UIComponents
-        from sip_components.ui_components import UIComponents
+        
         ui = UIComponents()
         ui.render_metric_card(f"Total {metrics_title} Stores", total_stores, column=col1)
         ui.render_metric_card("Total Affected Banners", total_retailers, column=col2)

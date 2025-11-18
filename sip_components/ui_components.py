@@ -15,12 +15,25 @@ from st_aggrid.grid_options_builder import GridOptionsBuilder
 
 class UIComponents:
     @staticmethod
+    def format_large_number(evalue):
+        """Format large numbers to K (thousands) or M (millions)"""
+        if not isinstance(value, (int, float)):
+            return str(value)
+        
+        if abs(value) >= 1_000_000:
+            return f"{value / 1_000_000:.1f}M"
+        elif abs(value) >= 1_000:
+            return f"{value / 1_000:.1f}K"
+        else:
+            return f"{value:,.0f}"
+    
+    @staticmethod
     def render_metric_card(title, value, subtitle="", column=None):
         """Render a standardized metric card"""
         print("Rendering metric card:", title, value, subtitle)
         # Handle different value types (numbers vs strings)
         if isinstance(value, (int, float)):
-            formatted_value = f"{value:,}"
+            formatted_value = UIComponents.format_large_number(value)
         else:
             formatted_value = str(value)
             
