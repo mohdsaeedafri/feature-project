@@ -1,7 +1,3 @@
-"""
-UIComponents - Standardized UI elements for the Store Intelligence Platform
-Includes data tables, metric cards, charts, and download buttons
-"""
 from plotly.graph_objs.isosurface.caps import Z
 import streamlit as st
 import pandas as pd
@@ -15,25 +11,12 @@ from st_aggrid.grid_options_builder import GridOptionsBuilder
 
 class UIComponents:
     @staticmethod
-    def format_large_number(evalue):
-        """Format large numbers to K (thousands) or M (millions)"""
-        if not isinstance(value, (int, float)):
-            return str(value)
-        
-        if abs(value) >= 1_000_000:
-            return f"{value / 1_000_000:.1f}M"
-        elif abs(value) >= 1_000:
-            return f"{value / 1_000:.1f}K"
-        else:
-            return f"{value:,.0f}"
-    
-    @staticmethod
     def render_metric_card(title, value, subtitle="", column=None):
         """Render a standardized metric card"""
         print("Rendering metric card:", title, value, subtitle)
         # Handle different value types (numbers vs strings)
         if isinstance(value, (int, float)):
-            formatted_value = UIComponents.format_large_number(value)
+            formatted_value = f"{value:,}"
         else:
             formatted_value = str(value)
             
@@ -127,7 +110,7 @@ class UIComponents:
                 hoverlabel=dict(
                     bgcolor="white",
                     bordercolor="#CBCACA",
-                    font=dict(size=13, color="black", family="Arial")
+                    font=dict(size=11, color="black", family="Arial")
                 )
             ))
 
@@ -215,7 +198,7 @@ class UIComponents:
                     textposition='outside',
                     hovertemplate=(
                         "<b>%{x}</b><br>"  # Banner name
-                        "<span style='color:#CBCACA'>●</span> "
+                        "<span style='color:#CBCACA'>•</span> "
                         "<b>Active Stores:</b> %{y:,}<br><br>"
                         "<span style='color:#CBCACA'>•</span> "
                         f"<span style='color:black'>Date Period: {recent_period_str}</span><br>"
@@ -228,7 +211,7 @@ class UIComponents:
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor='#CBCACA',
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
 
@@ -316,7 +299,7 @@ class UIComponents:
                 marker=dict(size=7),
                 hovertemplate=(
                     "%{x|%b %Y}<br>"
-                    f"<span style='color:{color}'>●</span> "
+                    f"<span style='color:{color}'>•</span> "
                     f"<b>{store_label}:</b> <b>%{{y:,}}</b><br><br>"
                     f"<span style='color:{color}'>•</span> "
                     "<span style='color:black'>Number of Sectors: %{customdata[0]}</span><br>"
@@ -332,7 +315,7 @@ class UIComponents:
                 hoverlabel=dict(
                     bgcolor="white",
                     bordercolor=color,
-                    font=dict(size=13, color="black", family="Arial")
+                    font=dict(size=11, color="black", family="Arial")
                 )
             ))
 
@@ -430,7 +413,7 @@ class UIComponents:
                     textposition='outside',
                     hovertemplate=(
                         "<b>%{x}</b><br>"
-                        f"<span style='color:{color}'>●</span> "
+                        f"<span style='color:{color}'>•</span> "
                         f"<b>{store_type} Stores:</b> %{{y:,}}<br><br>"
                         f"<span style='color:{color}'>•</span> "
                         f"<span style='color:black'>Date Period: {date_period}</span><br>"
@@ -443,7 +426,7 @@ class UIComponents:
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
 
@@ -734,7 +717,7 @@ class UIComponents:
                 fig_opened_map.update_traces(
                     hovertemplate=(
                         "<b>%{hovertext}</b><br>"
-                        f"<span style='color:{color}'>●</span> <b>{store_type} Stores:</b> %{{z:,}}<br><br>"
+                        f"<span style='color:{color}'>•</span> <b>{store_type} Stores:</b> %{{z:,}}<br><br>"
                         f"<span style='color:{color}'>•</span> <span style='color:black'>Date Period: " + date_period + "</span><br>"
                         f"<span style='color:{color}'>•</span> <span style='color:black'>Number of Sectors: %{{customdata[0]:,}}</span><br>"
                         f"<span style='color:{color}'>•</span> <span style='color:black'>Number of Banners: %{{customdata[1]:,}}</span><br>"
@@ -742,7 +725,7 @@ class UIComponents:
                         "<extra></extra>"
                     ),
                     customdata=[[state_metadata[s]["num_sectors"], state_metadata[s]["num_banners"], state_metadata[s]["num_msa"]] for s in opened_by_state_full["State"]],
-                    hoverlabel=dict(bgcolor="white", bordercolor=color, font=dict(size=13, color="black", family="Arial")),
+                    hoverlabel=dict(bgcolor="white", bordercolor=color, font=dict(size=11, color="black", family="Arial")),
                 )
 
                 # Colorbar title like the reference
@@ -792,7 +775,7 @@ class UIComponents:
                     locationmode="USA-states",
                     lon=[state_centers[s][0] for s in ann_df["State"] if s in state_centers],
                     lat=[state_centers[s][1] for s in ann_df["State"] if s in state_centers],
-                    text=[f"{s}<br>{cnt:,}" for s, cnt in zip(ann_df["State"], ann_df["Opened Stores"]) if s in state_centers],
+                    text=[f"{s}<br>{int(cnt):,}" for s, cnt in zip(ann_df["State"], ann_df["Opened Stores"]) if s in state_centers],
                     mode="text",
                     showlegend=False,
                     textfont=dict(size=12, color=text_colors if store_type == "Net" else "black"),
@@ -864,7 +847,7 @@ class UIComponents:
                 textposition='outside',
                 hovertemplate=(
                     "<b>%{x}</b><br>"  # City name
-                    f"<span style='color:{color}'>●</span> "
+                    f"<span style='color:{color}'>•</span> "
                     f"<b>{store_type} Stores:</b> %{{y:,}}<br><br>"
                     f"<span style='color:{color}'>•</span> "
                     "<span style='color:black'>Date Period: " + f"{date_period}</span><br>"
@@ -882,7 +865,7 @@ class UIComponents:
                 hoverlabel=dict(
                     bgcolor="white",
                     bordercolor=color,
-                    font=dict(size=13, color="black", family="Arial")
+                    font=dict(size=11, color="black", family="Arial")
                 )
             ))
 
@@ -1225,7 +1208,7 @@ class UIComponents:
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 )
 
@@ -1373,7 +1356,7 @@ class UIComponents:
                     textposition='outside',
                     hovertemplate=(
                         "<b>%{x}</b><br>"  # Sector name
-                        f"<span style='color:{color}'>●</span> "
+                        f"<span style='color:{color}'>•</span> "
                         f"<b>{store_type} Stores:</b> %{{y:,}}<br><br>"
                         f"<span style='color:{color}'>•</span> "
                         f"<span style='color:black'>Date Period: {date_period}</span><br>"
@@ -1388,7 +1371,7 @@ class UIComponents:
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
 
@@ -1471,9 +1454,22 @@ class UIComponents:
  
             combined.rename(columns={'PeriodMonth': 'MonthStart'}, inplace=True)
             print(f"🔍 DEBUG: After rename, columns: {list(combined.columns)}")
- 
+            
+            num_sectors_list = []
+            num_banners_list = []
+            num_states_list = []
+            num_msa_list = []
+
+            for month in combined['MonthStart']:
+                month_data = data[data['PeriodMonth'] == month]
+                num_sectors_list.append(month_data['Sector_Coresight'].nunique())
+                num_banners_list.append(month_data['ChainName_Coresight'].nunique())
+                num_states_list.append(month_data['State'].nunique())
+                num_msa_list.append(month_data['MsaName'].nunique())
+            
             # Prepare text labels safely - convert to k format
-            text_labels = [f"{x/1000:.3f}k" for x in combined['square_footage']]
+            from sip_components.tab_components import format_large_number
+            text_labels = [format_large_number(x) for x in combined['square_footage']]
             print(f"🔍 DEBUG: Generated text labels (first 5): {text_labels[:5]}")
  
             fig = go.Figure()
@@ -1487,18 +1483,32 @@ class UIComponents:
                 text=text_labels,
                 textposition='top center',
                 hovertemplate=(
-                    "%{x|%b %Y}<br>"
-                    f"<span style='color:{color}'>●</span> "
-                    "<b>Total Square Footage:</b> %{y:,.0f}<br>"
-                    "<b>Stores Opened:</b> %{customdata} stores<br>"
+                    "<b>%{x|%b %Y}</b><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<b>Total Square Footage:</b> %{y:,.1f}<br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<b>Stores Opened:</b> %{customdata[4]} stores<br><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of Sectors: %{customdata[0]}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of Banners: %{customdata[1]}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of States: %{customdata[2]}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of MSA: %{customdata[3]}</span><br>"
                     "<extra></extra>"
                 ),
-                customdata=combined['StoreCount'].astype(str)
+                customdata=list(zip(num_sectors_list, num_banners_list, num_states_list, num_msa_list, combined['StoreCount'].astype(str))),
+                hoverlabel=dict(
+                    bgcolor="white",
+                    bordercolor=color,
+                    font=dict(size=11, color="black", family="Arial")
+                )
             ))
  
             fig.update_layout(
                 title=f"Total Square Footage {chart_title} Over Time",
-                yaxis_title="Square Footage(k)",
+                yaxis_title="Square Footage",
                 xaxis=dict(tickformat="%b %Y", title="Month"),
                 height=400,
                 margin=dict(l=10, r=10, t=60, b=40),
@@ -1564,9 +1574,27 @@ class UIComponents:
                 count = data[data['City'] == city].shape[0]
                 city_store_counts.append(str(count))
             print(f"🔍 DEBUG: Generated store counts (first 5): {city_store_counts[:5]}")
+            
+            city_metadata = {}
+            for city in sqft_by_city.index:
+                city_data = data[data['City'] == city]
+                city_metadata[city] = {
+                    'num_sectors': city_data['Sector_Coresight'].nunique(),
+                    'num_banners': city_data['ChainName_Coresight'].nunique(),
+                    'num_states': city_data['State'].nunique(),
+                    'num_msa': city_data['MsaName'].nunique()
+                }
+
+            # Calculate overall date range
+            start_date = data['Period'].min()
+            end_date   = data['Period'].max()
+            start_date_str = start_date.strftime("%B %Y")
+            end_date_str   = end_date.strftime("%B %Y")
+            date_period = f"{start_date_str} to {end_date_str}"
  
             # Prepare text labels safely
-            text_labels = [f"{x:,.0f}" for x in sqft_by_city.values]
+            from sip_components.tab_components import format_large_number
+            text_labels = [format_large_number(x) for x in sqft_by_city.values]
             print(f"🔍 DEBUG: Generated text labels (first 5): {text_labels[:5]}")
  
             fig = go.Figure()
@@ -1578,12 +1606,29 @@ class UIComponents:
                 textposition='outside',
                 hovertemplate=(
                     "<b>%{x}</b><br>"
-                    f"<span style='color:{color}'>●</span> "
-                    "<b>Total Square Footage:</b> %{y:,.0f}<br>"
-                    "<b>Stores:</b> %{customdata} stores<br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<b>Total Square Footage:</b> %{y:,.1f}<br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<b>Stores:</b> %{customdata[4]} stores<br>"
+                    "<br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Date Period: " + f"{date_period}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of Sectors: %{customdata[0]}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of Banners: %{customdata[1]}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of States: %{customdata[2]}</span><br>"
+                    f"<span style='color:{color}'>•</span> "
+                    "<span style='color:black'>Number of MSA: %{customdata[3]}</span><br>"
                     "<extra></extra>"
                 ),
-                customdata=city_store_counts
+                customdata=[[city_metadata[city]['num_sectors'], city_metadata[city]['num_banners'], city_metadata[city]['num_states'], city_metadata[city]['num_msa'], city_store_counts[i]] for i, city in enumerate(sqft_by_city.index)],
+                hoverlabel=dict(
+                    bgcolor="white",
+                    bordercolor=color,
+                    font=dict(size=11, color="black", family="Arial")
+                )
             ))
  
             fig.update_layout(
@@ -1660,7 +1705,7 @@ class UIComponents:
             Disclaimer: Certain data are derived from calculations that use data licensed from third parties, including ChainXY. 
             Coresight Research has made substantial efforts to clean the data and identify potential issues. However, changes to retailers' store locators 
             may impact database-sourced data. See our 
-            <a href="{overview_url}" target="_blank">Overview</a> 
+            <a href="{overview_url}" target="_blank">Overview/Retailer List</a> 
             document and <a href="/changelogs#store-intelligence-platform" target="_self">Data Release Notes</a>
             for more details.
             </p>

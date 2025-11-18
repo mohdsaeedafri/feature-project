@@ -10,7 +10,16 @@ import json
 import logging
 import colorsys
 from datetime import datetime, timedelta
-from sip_components.ui_components import UIComponents
+
+
+def format_large_number(value):
+    """Format large numbers: M for millions, K for thousands with 1 decimal place"""
+    if value >= 1000000:
+        return f"{value / 1000000:.1f}M"
+    elif value >= 1000:
+        return f"{value / 1000:.1f}K"
+    else:
+        return f"{value:.1f}"
 
 class TabComponents:
     @staticmethod
@@ -414,9 +423,7 @@ class TabComponents:
                         # ------------ 4) Format metric ------------
                         # formatted_square_footage = f"{total_square_footage:,.0f}" if total_square_footage > 0 else "N/A"
                         if total_square_footage > 0:
-                            # Convert to proper format (if it's already in thousands, we multiply by 1000 for display)
-                            actual_square_footage = total_square_footage * 1000
-                            formatted_square_footage = UIComponents.format_large_number(actual_square_footage)
+                            formatted_square_footage = format_large_number(total_square_footage)
                         else:
                             formatted_square_footage = "N/A"
 
@@ -427,7 +434,7 @@ class TabComponents:
         if metrics_title == "Net":
             return formatted_square_footage
         # Render metric cards using UIComponents
-        
+        from sip_components.ui_components import UIComponents
         ui = UIComponents()
         ui.render_metric_card(f"Total {metrics_title} Stores", total_stores, column=col1)
         ui.render_metric_card("Total Affected Banners", total_retailers, column=col2)
@@ -565,6 +572,7 @@ class TabComponents:
             sqft_col1, sqft_col2 = st.columns([7, 3])
             ui.render_square_footage_over_time_chart(filtered_data, column=sqft_col1, color=color, chart_title=chart_title_prefix)
             ui.render_square_footage_by_city_chart(filtered_data, column=sqft_col2, color=color)
+            st.caption("The square footage impact is estimated based on the average store sizes for each banner, rather than the sizes of individual stores that have been opened or closed.")
     @staticmethod
     def render_compare_retailers_charts(filtered_data, net_filtered_data, selected_parent_names, selected_chain_names, chart_title_prefix="Opened"):
         """Render charts for Compare Retailers tab"""
@@ -640,7 +648,7 @@ class TabComponents:
                     marker=dict(size=7, color=color),
                     hovertemplate=(
                         "<b>%{x|%b %Y}</b><br>"  # Formatted date
-                        "<span style='color:" + str(color) + "'>●</span> "
+                        "<span style='color:" + str(color) + "'>•</span> "
                         "<b>" + str(legend_grp) + ":</b> %{y:,}<br><br>"
                         "<span style='color:" + str(color) + "'>•</span> "
                         "<span style='color:black'>Number of Sectors: %{customdata[0]}</span><br>"
@@ -656,7 +664,7 @@ class TabComponents:
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
             
@@ -726,13 +734,13 @@ class TabComponents:
                     textposition='outside',
                     hovertemplate=(
                         f"<b>{banner}</b><br>"
-                        f"<span style='color:{color}'>●</span> "
+                        f"<span style='color:{color}'>•</span> "
                         f"<b>{store_type} Stores:</b> %{{y:,}}<extra></extra>"
                     ),
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
 
@@ -818,13 +826,13 @@ class TabComponents:
                 textposition='outside',
                 hovertemplate=(
                     "<b>%{x}</b><br>"  # Retailer name
-                    "<span style='color:" + str(color) + "'>●</span> "
+                    "<span style='color:" + str(color) + "'>•</span> "
                     f"<b>{store_type} Stores:</b> %{{y:,}}<extra></extra>"
                 ),
                 hoverlabel=dict(
                     bgcolor="white",
                     bordercolor=color,
-                    font=dict(size=13, color="black", family="Arial")
+                    font=dict(size=11, color="black", family="Arial")
                 )
             ))
 
@@ -990,7 +998,7 @@ class TabComponents:
                     marker=dict(size=7, color=color),
                     hovertemplate=(
                         "<b>%{x|%b %Y}</b><br>"  # Formatted month-year
-                        "<span style='color:" + str(color) + "'>●</span> "
+                        "<span style='color:" + str(color) + "'>•</span> "
                         "<b>" + str(sector) + ":</b> %{y:,}<br><br>"
                         "<span style='color:" + str(color) + "'>•</span> "
                         "<span style='color:black'>Number of Banners: %{customdata[0]}</span><br>"
@@ -1004,7 +1012,7 @@ class TabComponents:
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
 
@@ -1101,13 +1109,13 @@ class TabComponents:
                     textposition='outside',
                     hovertemplate=(
                         "<b>%{x}</b><br>"  # Sector name
-                        "<span style='color:" + color + "'>●</span> "
+                        "<span style='color:" + color + "'>•</span> "
                         "<b>" + hover_label + "</b> %{y:,}<extra></extra>"
                     ),
                     hoverlabel=dict(
                         bgcolor="white",
                         bordercolor=color,
-                        font=dict(size=13, color="black", family="Arial")
+                        font=dict(size=11, color="black", family="Arial")
                     )
                 ))
             
@@ -1175,13 +1183,13 @@ class TabComponents:
                 textposition='outside',
                 hovertemplate=(
                     "<b>%{x}</b><br>"  # Banner name
-                    "<span style='color:" + color + "'>●</span> "
+                    "<span style='color:" + color + "'>•</span> "
                     "<b>" + chart_title + ":</b> %{y:,}<extra></extra>"
                 ),
                 hoverlabel=dict(
                     bgcolor="white",
                     bordercolor=color,
-                    font=dict(size=13, color="black", family="Arial")
+                    font=dict(size=11, color="black", family="Arial")
                 )
             ))
 
@@ -1266,7 +1274,6 @@ class TabComponents:
     @staticmethod
     def render_data_table(filtered_data, table_title="Stores Table"):
         """Render a standardized data table with download functionality"""
-        st.subheader(table_title)
         
         # Prepare table data
         table_data = filtered_data.copy()
@@ -1307,9 +1314,54 @@ class TabComponents:
             # Create download button
             col1, col2 = st.columns([7, 1.05])
             with col1:
-                st.write("")
+                st.subheader(table_title)
 
             with col2:
+                if table_title == "Opened Stores Table":
+                    st.markdown("""
+                    <style>
+                        .stDownloadButton>button {
+                            background-color: #A3C0CE;
+                            color: white;
+                            border: none;
+                        }
+                        .stDownloadButton>button:hover {
+                            border: 2px solid #A3C0CE;
+                            background-color: white;
+                            color: #A3C0CE;
+                        }
+                    </style>
+                    """, unsafe_allow_html=True)
+                elif table_title == "Closed Stores Table":
+                    st.markdown("""
+                        <style>
+                            .stDownloadButton>button {
+                                background-color: #d62e2f;
+                                color: white;
+                                border: none;
+                            }
+                            .stDownloadButton>button:hover {
+                                border: 2px solid #d62e2f;
+                                background-color: white;
+                                color: #d62e2f;
+                            }
+                        </style>
+                        """, unsafe_allow_html=True)
+                else:
+                    st.markdown("""
+                        <style>
+                            .stDownloadButton>button {
+                                background-color: #CBCACA;
+                                color: white;
+                                border: none;
+                            }
+                            .stDownloadButton>button:hover {
+                                border: 2px solid #CBCACA;
+                                background-color: white;
+                                color: #CBCACA;
+                            }
+                        </style>
+                        """, unsafe_allow_html=True)
                 if not renamed_data.empty:
                     # Convert DataFrame to CSV for download (simpler approach)
                     csv = renamed_data.to_csv(index=False)

@@ -138,7 +138,7 @@ class BasePage:
         
     def render_navigation_buttons(self, changelog_return_page="active"):
         """Render the common navigation buttons"""
-        col_space, col4, col1, col2, col3 = st.columns([56, 14, 14, 8, 8])
+        col_space, col4, col1, col2, col3 = st.columns([56, 14, 14, 16, 8])
         
         user_filters = self.auth_cookie.get("filters", {}) if isinstance(self.auth_cookie, dict) else {}
         
@@ -164,7 +164,7 @@ class BasePage:
                 overview_url = "https://stage3.coresight.com/store-intelligence-platform-overview/"
             else:
                 overview_url = "https://www.coresight.com/store-intelligence-platform-overview/"
-            st.link_button("Overview", overview_url, type="tertiary", icon=":material/help:")
+            st.link_button("Overview/Retailer List", overview_url, type="tertiary", icon=":material/help:")
             
         with col3:
             if st.button("Log Out", key="Logout", type="tertiary", icon=":material/logout:"):

@@ -242,19 +242,19 @@ def fetch_square_footage_data():
     # Fetch parent_chain_names_data for square footage calculation
     parent_chain_query = "SELECT ParentName_Coresight, ChainName_Coresight, Average_Square_Footage FROM parent_chain_names_data"
     parent_chain_df = pd.read_sql(parent_chain_query, con=conn)
+    parent_chain_df['Average_Square_Footage'] = pd.to_numeric(parent_chain_df['Average_Square_Footage'], errors='coerce')
+    parent_chain_df['Average_Square_Footage'] = parent_chain_df['Average_Square_Footage'] * 1000.0
     
     conn.close()
     return parent_chain_df
 
 @st.cache_data(show_spinner=False)
 def fetch_data_population():
-    conn = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD, host=DB_HOST, database=DB_NAME)
-    
     connection_params = {
-        'user': DB_USER,
-        'password': DB_PASSWORD,
-        'host': DB_HOST,
-        'database': DB_NAME
+        'user': os.getenv('DB_USER'),
+        'password': os.getenv('DB_PASSWORD'),
+        'host': os.getenv('DB_HOST'),
+        'database': os.getenv('DB_NAME')
     }
 
     if os.getenv('ENABLE_SSL', 'false').lower() == 'true' and os.getenv('SSL_CA'):
@@ -382,11 +382,11 @@ if selected_tab == "Base Dashboard":
     tabs.render_standard_charts(filtered_data, chart_title_prefix="Opened")
 
     # Render data table using TabComponents
-    tabs.render_data_table(filtered_data, table_title="Opened Stores")
+    tabs.render_data_table(filtered_data, table_title="Opened Stores Table")
 
 elif selected_tab == "Compare Retailers":
     # Create a custom filter manager for Compare Retailers tab with different session state keys
-    compare_retailers_filter_manager = FilterManager(page.auth_cookie)
+    compare_retailers_filter_manager = FilterManager(page.auth_cookie, page_prefix="opening_compare_retailers",base_page=page)
     
     # Override the session state keys to avoid conflicts with base dashboard
     # compare_retailers_filter_manager.user_filters = user_filters.copy()
@@ -429,7 +429,7 @@ elif selected_tab == "Compare Retailers":
             tabs.render_compare_retailers_charts(filtered_data,"", parent_chain_name, selected_chain_name, chart_title_prefix="Opened")
             
             # Render data table
-            tabs.render_data_table(filtered_data, table_title="Opened Stores - Compare Retailers")
+            tabs.render_data_table(filtered_data, table_title="Opened Stores Table")
         else:
             st.info("No data available for the selected filters")
 
@@ -484,7 +484,7 @@ elif selected_tab == "Compare Sectors":
             tabs.render_compare_sectors_charts(filtered_data, sector_comparison_selected_sectors, chart_title_prefix="Opened")
             
             # Render data table
-            tabs.render_data_table(filtered_data, table_title="Opened Stores - Compare Sectors")
+            tabs.render_data_table(filtered_data, table_title="Opened Stores Table")
         else:
             st.info("No data available for the selected filters")
 

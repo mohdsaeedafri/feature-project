@@ -371,6 +371,8 @@ def fetch_square_footage_data():
     # Fetch parent_chain_names_data for square footage calculation
     parent_chain_query = "SELECT ParentName_Coresight, ChainName_Coresight, Average_Square_Footage FROM parent_chain_names_data"
     parent_chain_df = pd.read_sql(parent_chain_query, con=conn)
+    parent_chain_df['Average_Square_Footage'] = pd.to_numeric(parent_chain_df['Average_Square_Footage'], errors='coerce')
+    parent_chain_df['Average_Square_Footage'] = parent_chain_df['Average_Square_Footage'] * 1000.0
     
     conn.close()
     return parent_chain_df
@@ -710,7 +712,7 @@ elif selected_tab == "Compare Retailers":
             
             tabs.render_compare_retailers_charts(opened_filtered,filtered_data, filter_values["parent_chain_name"],filter_values["selected_chain_name"], chart_title_prefix="Net")
                                                 
-            tabs.render_data_table(filtered_data, table_title="Net Stores - Compare Retailers")
+            tabs.render_data_table(filtered_data, table_title="Net Stores Table")
 
 elif selected_tab == "Compare Sectors":
     compare_filter_manager = FilterManager(page.auth_cookie)

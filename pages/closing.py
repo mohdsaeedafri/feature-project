@@ -96,6 +96,8 @@ def fetch_square_footage_data():
     # Fetch parent_chain_names_data for square footage calculation
     parent_chain_query = "SELECT ParentName_Coresight, ChainName_Coresight, Average_Square_Footage FROM parent_chain_names_data"
     parent_chain_df = pd.read_sql(parent_chain_query, con=conn)
+    parent_chain_df['Average_Square_Footage'] = pd.to_numeric(parent_chain_df['Average_Square_Footage'], errors='coerce')
+    parent_chain_df['Average_Square_Footage'] = parent_chain_df['Average_Square_Footage'] * 1000.0
     
     conn.close()
     return parent_chain_df
@@ -329,7 +331,7 @@ if selected_tab == "Base Dashboard":
     tabs.render_standard_charts(filtered_data, chart_title_prefix="Closed")
 
     # Render data table using TabComponents
-    tabs.render_data_table(filtered_data, table_title="Closed Stores")
+    tabs.render_data_table(filtered_data, table_title="Closed Stores Table")
 
 elif selected_tab == "Compare Retailers":
     # Create a custom filter manager for Compare Retailers tab with different session state keys
@@ -377,7 +379,7 @@ elif selected_tab == "Compare Retailers":
             tabs.render_compare_retailers_charts(filtered_data,"", parent_chain_name, selected_chain_name, chart_title_prefix="Closed")
             
             # Render data table
-            tabs.render_data_table(filtered_data, table_title="Closed Stores - Compare Retailers")
+            tabs.render_data_table(filtered_data, table_title="Closed Stores Table")
         else:
             st.info("No data available for the selected filters")
 
@@ -432,7 +434,7 @@ elif selected_tab == "Compare Sectors":
             tabs.render_compare_sectors_charts(filtered_data, sector_comparison_selected_sectors, chart_title_prefix="Closed")
             
             # Render data table
-            tabs.render_data_table(filtered_data, table_title="Closed Stores - Compare Sectors")
+            tabs.render_data_table(filtered_data, table_title="Closed Stores Table")
         else:
             st.info("No data available for the selected filters")
 
