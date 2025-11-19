@@ -4,7 +4,7 @@
 The refactored `net.py` (435 lines) replaces the original monolithic version (3808+ lines) using the SIP modular architecture. It maintains 100% feature parity while reducing code by 88%.
 
 ## Architecture Components Used
-
+dd
 ### 1. BasePage
 Handles:
 - Authentication & session management
