@@ -36,9 +36,7 @@ page.render_navigation_buttons(changelog_return_page="active")
 
 # Apply consistent styling
 styling = StylingManager()
-styling.apply_global_styles()
-styling.hide_streamlit_elements()
-styling.apply_bootstrap()
+styling.remove_metric_link()
 
 # Initialize other components
 ui = UIComponents()
@@ -557,6 +555,7 @@ if selected_tab == "Base Dashboard":
         previous_data = None
 
     # Render metrics using TabComponents
+    styling.render_horizontal_line()
     tabs.render_metrics_section(filtered_data, metrics_title="Active", previous_data=previous_data, show_extended_metrics=True, is_active_page=True, filtered_data_recent=filtered_data_recent, square_footage_data=square_footage_data, chain_name_selected=filter_values["selected_chain_name"], parent_chain_name_selected=filter_values["parent_chain_name"],active_sq_footage=True)
     filtered_data = tabs.add_square_footage_column(filtered_data, square_footage_data)
     # Render charts using TabComponents
@@ -605,6 +604,7 @@ elif selected_tab == "Compare Retailers":
         is_empty = len(filtered_data) == 0
         if not is_empty and total_selected_retailers >= 2:
             # Render metrics (restoring as requested)
+            styling.render_horizontal_line()
             tabs.render_metrics_section(filtered_data, metrics_title="Active", show_extended_metrics=False,active_sq_footage=False, square_footage_data=square_footage_data, chain_name_selected=filter_values["selected_chain_name"], parent_chain_name_selected=filter_values["parent_chain_name"])
             
             # Render comparison charts

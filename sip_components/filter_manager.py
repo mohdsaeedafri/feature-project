@@ -215,7 +215,7 @@ class FilterManager:
                 })
                 # Reset downstream filters when date range changes
                 # This ensures that sector, retailer, and location filters are updated based on the new date range
-                self.reset_downstream_filters(session_state_key_prefix)
+                # self.reset_downstream_filters(session_state_key_prefix)
                 st.rerun()
 
             st.session_state.update({

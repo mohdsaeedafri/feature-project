@@ -19,17 +19,21 @@ class UIComponents:
             formatted_value = f"{value:,}"
         else:
             formatted_value = str(value)
-            
+        # Determine subscript below the title when Square Footage
+        sub_label = subtitle if subtitle else ("(Thous. Sq. Ft.)" if str(title).strip().lower() in ("opened square footage", "active square footage", "closed square footage") else "")
+        
         if column:
             with column:
                 st.markdown(f"""
-                <h1 style='font-size: 40px; text-align: left; margin-bottom: 0px;'>{formatted_value}</h1>
-                <h6 style='text-align: left; margin-top: 0px;'>{title}</h6>
+                <h1 style='font-size: 40px; text-align: center; margin-bottom: 0px; line-height: 1;'>{formatted_value}</h1>
+                <h6 style='text-align: center; margin-top: 0px; margin-bottom: 0px; line-height: 1;'>{title}</h6>
+                {f"<div style='text-align: center; margin-top: 0px; font-size: 14px; line-height: 1;'>{sub_label}</div>" if sub_label else ""}
                 """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
-            <h1 style='font-size: 40px; text-align: left; margin-bottom: 0px;'>{formatted_value}</h1>
-            <h6 style='text-align: left; margin-top: 0px;'>{title}</h6>
+            <h1 style='font-size: 40px; text-align: center; margin-bottom: 0px; line-height: 1;'>{formatted_value}</h1>
+            <h6 style='text-align: center; margin-top: 0px; margin-bottom: 0px; line-height: 1;'>{title}</h6>
+            {f"<div style='text-align: center; margin-top: 0px; font-size: 14px; line-height: 1;'>{sub_label}</div>" if sub_label else ""}
             """, unsafe_allow_html=True)
             
     @staticmethod
@@ -1507,7 +1511,6 @@ class UIComponents:
             ))
  
             fig.update_layout(
-                title=f"Total Square Footage {chart_title} Over Time",
                 yaxis_title="Square Footage",
                 xaxis=dict(tickformat="%b %Y", title="Month"),
                 height=400,
@@ -1529,8 +1532,10 @@ class UIComponents:
  
             if column:
                 with column:
+                    st.markdown(f"<h4 style='font-size: 20px;text-align: center;'>Total Square Footage {chart_title} Over Time</h4>", unsafe_allow_html=True)
                     st.plotly_chart(fig, use_container_width=True, config=config)
             else:
+                st.markdown(f"<h4 style='font-size: 20px;text-align: center;'>Total Square Footage {chart_title} Over Time</h4>", unsafe_allow_html=True)
                 st.plotly_chart(fig, use_container_width=True, config=config)
  
             print("✅ DEBUG: Chart rendered successfully!")
@@ -1632,7 +1637,6 @@ class UIComponents:
             ))
  
             fig.update_layout(
-                title="Top Cities by Square Footage",
                 xaxis_title="City",
                 yaxis_title="Square Footage",
                 xaxis=dict(tickangle=45),
@@ -1643,8 +1647,10 @@ class UIComponents:
  
             if column:
                 with column:
+                    st.markdown(f"<h4 style='font-size: 20px;text-align: center;'>Top {sqft_by_city.shape[0]} Cities by Square Footage</h4>", unsafe_allow_html=True)
                     st.plotly_chart(fig, use_container_width=True)
             else:
+                st.markdown(f"<h4 style='font-size: 20px;text-align: center;'>Top {sqft_by_city.shape[0]} Cities by Square Footage</h4>", unsafe_allow_html=True)
                 st.plotly_chart(fig, use_container_width=True)
  
             print("✅ DEBUG: City Square Footage Chart rendered successfully!")

@@ -138,6 +138,7 @@ class BasePage:
         
     def render_navigation_buttons(self, changelog_return_page="active"):
         """Render the common navigation buttons"""
+        st.markdown("<br>", unsafe_allow_html=True)
         col_space, col4, col1, col2, col3 = st.columns([56, 14, 14, 16, 8])
         
         user_filters = self.auth_cookie.get("filters", {}) if isinstance(self.auth_cookie, dict) else {}

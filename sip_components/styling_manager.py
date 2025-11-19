@@ -96,6 +96,23 @@ class StylingManager:
         """, unsafe_allow_html=True)
         
     @staticmethod
+    def remove_metric_link():
+        st.markdown("""
+            <style>
+            /* Hide header action elements (link/share icon) */
+            [data-testid="stHeaderActionElements"] {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            .st-emotion-cache-nccqt6 h6 {
+                font-size: 1rem;
+                padding: 0.2rem;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+    
+    @staticmethod
     def hide_streamlit_elements():
         """Hide default Streamlit elements"""
         hide_streamlit_style = """

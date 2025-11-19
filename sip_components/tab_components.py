@@ -13,13 +13,7 @@ from datetime import datetime, timedelta
 
 
 def format_large_number(value):
-    """Format large numbers: M for millions, K for thousands with 1 decimal place"""
-    if value >= 1000000:
-        return f"{value / 1000000:.1f}M"
-    elif value >= 1000:
-        return f"{value / 1000:.1f}K"
-    else:
-        return f"{value:.1f}"
+    return f"{value / 1000:.1f}"
 
 class TabComponents:
     @staticmethod
@@ -34,6 +28,7 @@ class TabComponents:
             st.markdown("<h1 style='font-size: 40px; text-align: left; padding-top: 0px; padding-bottom: 0px;'>Store Intelligence Platform</h1>", unsafe_allow_html=True)
         
         with col2:
+ 
             # Determine which tab should have the active class
             active_net = "active" if current_page == "net" else ""
             active_opening = "active" if current_page == "opening" else ""
@@ -77,6 +72,8 @@ class TabComponents:
                 </div>
             </div>
             """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)    
+            
     # def render_tab_navigation(current_page="net"):
     #     """Render the common tab navigation with Store Intelligence Platform heading"""
     #     tabs = ["Net", "Opening", "Closing", "Active"]
@@ -568,7 +565,6 @@ class TabComponents:
         elif chart_title_prefix == "Net":
                 color="#2D2A29"
         if 'square_footage' in filtered_data.columns:
-            st.markdown("### Square Footage Analysis")
             sqft_col1, sqft_col2 = st.columns([7, 3])
             ui.render_square_footage_over_time_chart(filtered_data, column=sqft_col1, color=color, chart_title=chart_title_prefix)
             ui.render_square_footage_by_city_chart(filtered_data, column=sqft_col2, color=color)
@@ -868,7 +864,6 @@ class TabComponents:
         print("filtered_data", filtered_data.columns)
         if 'square_footage' in filtered_data.columns:
                 print("helll")
-                st.markdown("### Square Footage Analysis")
                 sqft_col1, sqft_col2 = st.columns([7, 3])
                 ui.render_square_footage_over_time_chart(filtered_data, column=sqft_col1, color=color, chart_title=chart_title_prefix)
                 ui.render_square_footage_by_city_chart(filtered_data, column=sqft_col2, color=color)
@@ -1221,7 +1216,6 @@ class TabComponents:
         elif chart_title_prefix == "Net":
             color="#2D2A29"
         if 'square_footage' in filtered_data.columns:
-            st.markdown("### Square Footage Analysis")
             sqft_col1, sqft_col2 = st.columns([7, 3])
             ui.render_square_footage_over_time_chart(filtered_data, column=sqft_col1, color=color, chart_title=chart_title_prefix)
             ui.render_square_footage_by_city_chart(filtered_data, column=sqft_col2, color=color)

@@ -36,9 +36,7 @@ page.render_navigation_buttons(changelog_return_page="opening")
 
 # Apply consistent styling
 styling = StylingManager()
-styling.apply_global_styles()
-styling.hide_streamlit_elements()
-styling.apply_bootstrap()
+styling.remove_metric_link()
 
 # Initialize other components
 ui = UIComponents()
@@ -368,6 +366,7 @@ if selected_tab == "Base Dashboard":
         previous_data = None
 
     # Render metrics using TabComponents with square footage data
+    styling.render_horizontal_line()
     total_stores, total_retailers, total_sectors = tabs.render_metrics_section(
         filtered_data, 
         metrics_title="Opened", 
@@ -423,6 +422,7 @@ elif selected_tab == "Compare Retailers":
         is_empty = len(filtered_data) == 0
         if not is_empty and total_selected_retailers >= 2:
             # Render metrics (restoring as requested)
+            styling.render_horizontal_line()
             tabs.render_metrics_section(filtered_data, metrics_title="Opened", show_extended_metrics=False, square_footage_data=square_footage_data, chain_name_selected=filter_values["selected_chain_name"], parent_chain_name_selected=filter_values["parent_chain_name"])
             
             # Render comparison charts

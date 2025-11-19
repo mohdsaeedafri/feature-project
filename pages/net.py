@@ -36,9 +36,8 @@ page.render_navigation_buttons(changelog_return_page="net")
 
 # Apply consistent styling
 styling = StylingManager()
-styling.apply_global_styles()
-styling.hide_streamlit_elements()
-styling.apply_bootstrap()
+styling.remove_metric_link()
+ 
 
 # Initialize other components
 ui = UIComponents()
@@ -597,7 +596,7 @@ if selected_tab == "Base Dashboard":
     ui.render_metric_card("Previous Period Net Openings", prev_net_openings, column=col4)
     ui.render_metric_card("% Change vs Previous Period", percent_display, column=col5)
     ui.render_metric_card("Opened Stores per 10,000 people", stores_per_10k_display, column=col6)
-    
+    styling.render_horizontal_line()
     formatted_value= tabs.render_metrics_section(filtered_data, metrics_title="Net", show_extended_metrics=False, square_footage_data=square_footage_data, chain_name_selected=filter_values["selected_chain_name"], parent_chain_name_selected=filter_values["parent_chain_name"])
     ui.render_metric_card("Net Square Footage", formatted_value, column=col7)
 
